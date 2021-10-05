@@ -44,3 +44,7 @@ const router = useRouter();
   ...
 </Switch>;
 ```
+
+6. Replace all the `Link` and `NavLink` components from `react-router` by `NextLink`. All the `Redirect` components by a call to the `router.push` method of the `next-router`.
+
+> ⚠️ As you can't use the `Link` component from `react-router` anymore nested routes will no longer work as expected. You need to provide the full path of the route to your `NextLink` component.
