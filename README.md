@@ -1,11 +1,5 @@
 # Building a single page application with Next.js and React Router
 
-There are many reasons to use React Router inside a Next.js project! React Router is far more flexible than Next's router and makes it easy to share layout and state between among routes, even deeply nested ones. Doing this with Next.js requires consolidating all your shared logic in a custom `_app.tsx` component and using [complicated layout hacks](https://adamwathan.me/2019/10/17/persistent-layout-patterns-in-nextjs/).
-
-If you're building a single-page application and SEO isn't a concern, using React Router with Next.js is a powerful combination. Unfortunately there is no guidance for how to do this provided by th Next.js team. This repo demonstrates how this can be achieved.
-
-For the full description of this project, go to [https://colinhacks.com/essays/building-a-spa-with-nextjs](https://colinhacks.com/essays/building-a-spa-with-nextjs).
-
 ### The approach
 
 The basic idea:
@@ -30,24 +24,23 @@ function App({ Component, pageProps }: AppProps) {
 export default App;
 ```
 
-3. Rewrite all routes to the homepage
+3. Use optional catch all to catch all routes in the `/spa` path. You have to create a `pages/spa/[[...slug]].tsx` file inside the directory of your next app.
+
+4. Use the `StaticRouter` component to not bypass the history of the next router.
+5. You have to manually feed the `Switch` component from `react-router` with a custom location object.
 
 ```tsx
-// next.config.js
+// pages/spa/[[...slug]].tsx
+const router = useRouter();
 
-module.exports = {
-  async rewrites() {
-    return [
-      // Rewrite everything else to use `pages/index`
-      {
-        source: '/:path*',
-        destination: '/',
-      },
-    ];
-  },
-};
+<Switch
+  location={{
+    pathname: router.asPath,
+    search: "",
+    state: "",
+    hash: "",
+  }}
+>
+  ...
+</Switch>;
 ```
-
-Go to [https://colinhacks.com/essays/building-a-spa-with-nextjs](https://colinhacks.com/essays/building-a-spa-with-nextjs) for more details.
-
-Feel free to tweet questions to me [@colinhacks](https://twitter.com/colinhacks) 🤙
